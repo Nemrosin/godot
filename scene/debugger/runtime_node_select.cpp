@@ -36,7 +36,10 @@
 #include "core/debugger/debugger_marshalls.h"
 #include "core/debugger/engine_debugger.h"
 #include "core/input/input.h"
+#include "core/input/input_event.h"
+#include "core/input/shortcut.h"
 #include "core/math/geometry_3d.h"
+#include "core/os/keyboard.h"
 #include "scene/2d/camera_2d.h"
 #include "scene/debugger/scene_debugger_object.h"
 #include "scene/gui/popup_menu.h"
@@ -127,6 +130,17 @@ void RuntimeNodeSelect::_setup(const Dictionary &p_settings) {
 	freelook_sensitivity = Math::deg_to_rad((real_t)p_settings.get("editors/3d/freelook/freelook_sensitivity", 0.25));
 	orbit_sensitivity = Math::deg_to_rad((real_t)p_settings.get("editors/3d/navigation_feel/orbit_sensitivity", 0.004));
 	translation_sensitivity = p_settings.get("editors/3d/navigation_feel/translation_sensitivity", 1);
+
+	Array shortcut_serials;
+	shortcut_serials.append(p_settings.get("spatial_editor/freelook_forward", Array()).operator Array());
+	shortcut_serials.append(p_settings.get("spatial_editor/freelook_backwards", Array()).operator Array());
+	shortcut_serials.append(p_settings.get("spatial_editor/freelook_left", Array()).operator Array());
+	shortcut_serials.append(p_settings.get("spatial_editor/freelook_right", Array()).operator Array());
+	shortcut_serials.append(p_settings.get("spatial_editor/freelook_up", Array()).operator Array());
+	shortcut_serials.append(p_settings.get("spatial_editor/freelook_down", Array()).operator Array());
+	shortcut_serials.append(p_settings.get("spatial_editor/freelook_speed_modifier", Array()).operator Array());
+	shortcut_serials.append(p_settings.get("spatial_editor/freelook_slow_modifier", Array()).operator Array());
+	_set_freelook_keys(shortcut_serials);
 
 	/// 3D Selection Box Generation
 	// Copied from the Node3DEditor implementation.
@@ -319,30 +333,30 @@ void RuntimeNodeSelect::_process_frame() {
 			input->set_disable_input(false);
 		}
 
-		if (input->is_physical_key_pressed(Key::A)) {
-			direction -= right;
-		}
-		if (input->is_physical_key_pressed(Key::D)) {
-			direction += right;
-		}
-		if (input->is_physical_key_pressed(Key::W)) {
+		if (input->is_key_pressed(freelook_forward_key)) {
 			direction += forward;
 		}
-		if (input->is_physical_key_pressed(Key::S)) {
+		if (input->is_key_pressed(freelook_backwards_key)) {
 			direction -= forward;
 		}
-		if (input->is_physical_key_pressed(Key::E)) {
+		if (input->is_key_pressed(freelook_left_key)) {
+			direction -= right;
+		}
+		if (input->is_key_pressed(freelook_right_key)) {
+			direction += right;
+		}
+		if (input->is_key_pressed(freelook_up_key)) {
 			direction += up;
 		}
-		if (input->is_physical_key_pressed(Key::Q)) {
+		if (input->is_key_pressed(freelook_down_key)) {
 			direction -= up;
 		}
 
 		real_t speed = freelook_base_speed;
-		if (input->is_physical_key_pressed(Key::SHIFT)) {
+		if (input->is_key_pressed(freelook_speed_modifier_key)) {
 			speed *= 3.0;
 		}
-		if (input->is_physical_key_pressed(Key::ALT)) {
+		if (input->is_key_pressed(freelook_slow_modifier_key)) {
 			speed *= 0.333333;
 		}
 
@@ -1150,6 +1164,86 @@ void RuntimeNodeSelect::_update_view_2d() {
 	override_camera->set_offset(view_2d_offset);
 
 	_queue_selection_update();
+}
+
+void RuntimeNodeSelect::_set_freelook_keys(const Array &p_shortcut_serials) {
+	Array shortcuts;
+	for (int i = 0; i < p_shortcut_serials.size(); i++) {
+		Array shortcut_serial = p_shortcut_serials[i].operator Array();
+		shortcuts.append(DebuggerMarshalls::deserialize_key_shortcut(shortcut_serial));
+	}
+
+	Ref<Shortcut> forward_shortcut = shortcuts[0];
+	if (!forward_shortcut.is_valid()) {
+		freelook_forward_key = Key::W;
+	}
+	else {
+		Ref<InputEventKey> forward_key_event = forward_shortcut->get_events()[0];
+		freelook_forward_key = forward_key_event->get_physical_keycode();
+	}
+
+	Ref<Shortcut> backwards_shortcut = shortcuts[1];
+	if (!backwards_shortcut.is_valid()) {
+		freelook_backwards_key = Key::S;
+	}
+	else {
+		Ref<InputEventKey> backwards_key_event = backwards_shortcut->get_events()[0];
+		freelook_backwards_key = backwards_key_event->get_physical_keycode();
+	}
+
+	Ref<Shortcut> left_shortcut = shortcuts[2];
+	if (!left_shortcut.is_valid()) {
+		freelook_left_key = Key::A;
+	}
+	else {
+		Ref<InputEventKey> left_key_event = left_shortcut->get_events()[0];
+		freelook_left_key = left_key_event->get_physical_keycode();
+	}
+
+	Ref<Shortcut> right_shortcut = shortcuts[3];
+	if (!right_shortcut.is_valid()) {
+		freelook_right_key = Key::D;
+	}
+	else {
+		Ref<InputEventKey> right_key_event = right_shortcut->get_events()[0];
+		freelook_right_key = right_key_event->get_physical_keycode();
+	}
+
+	Ref<Shortcut> up_shortcut = shortcuts[4];
+	if (!up_shortcut.is_valid()) {
+		freelook_up_key = Key::E;
+	}
+	else {
+		Ref<InputEventKey> up_key_event = up_shortcut->get_events()[0];
+		freelook_up_key = up_key_event->get_physical_keycode();
+	}
+
+	Ref<Shortcut> down_shortcut = shortcuts[5];
+	if (!down_shortcut.is_valid()) {
+		freelook_down_key = Key::Q;
+	}
+	else {
+		Ref<InputEventKey> down_key_event = down_shortcut->get_events()[0];
+		freelook_down_key = down_key_event->get_physical_keycode();
+	}
+
+	Ref<Shortcut> speed_modifier_shortcut = shortcuts[6];
+	if (!speed_modifier_shortcut.is_valid()) {
+		freelook_speed_modifier_key = Key::SHIFT;
+	}
+	else {
+		Ref<InputEventKey> speed_modifier_key_event = speed_modifier_shortcut->get_events()[0];
+		freelook_speed_modifier_key = speed_modifier_key_event->get_physical_keycode();
+	}
+
+	Ref<Shortcut> slow_modifier_shortcut = shortcuts[7];
+	if (!slow_modifier_shortcut.is_valid()) {
+		freelook_slow_modifier_key = Key::ALT;
+	}
+	else {
+		Ref<InputEventKey> slow_modifier_key_event = slow_modifier_shortcut->get_events()[0];
+		freelook_slow_modifier_key = slow_modifier_key_event->get_physical_keycode();
+  }
 }
 
 #ifndef _3D_DISABLED

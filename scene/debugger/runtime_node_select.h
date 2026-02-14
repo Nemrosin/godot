@@ -95,6 +95,15 @@ private:
 	RID draw_canvas;
 	RID sel_drag_ci;
 
+	Key freelook_forward_key;
+	Key freelook_backwards_key;
+	Key freelook_left_key;
+	Key freelook_right_key;
+	Key freelook_up_key;
+	Key freelook_down_key;
+	Key freelook_speed_modifier_key;
+	Key freelook_slow_modifier_key;
+
 	bool camera_override = false;
 	bool camera_first_override = true;
 
@@ -219,6 +228,7 @@ private:
 	void _zoom_callback(float p_zoom_factor, Vector2 p_origin, Ref<InputEvent> p_event);
 	void _reset_camera_2d();
 	void _update_view_2d();
+	void _set_freelook_keys(const Array &p_shortcut_serials);
 
 #ifndef _3D_DISABLED
 	void _find_3d_items_at_pos(const Point2 &p_pos, Vector<SelectResult> &r_items);
