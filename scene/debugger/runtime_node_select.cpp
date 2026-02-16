@@ -1235,7 +1235,7 @@ void RuntimeNodeSelect::_set_freelook_keys(const Array &p_shortcut_serials) {
 	} else {
 		Ref<InputEventKey> slow_modifier_key_event = slow_modifier_shortcut->get_events()[0];
 		freelook_slow_modifier_key = slow_modifier_key_event->get_physical_keycode();
-  }
+  	}
 }
 
 #ifndef _3D_DISABLED
