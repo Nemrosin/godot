@@ -1176,8 +1176,7 @@ void RuntimeNodeSelect::_set_freelook_keys(const Array &p_shortcut_serials) {
 	Ref<Shortcut> forward_shortcut = shortcuts[0];
 	if (!forward_shortcut.is_valid()) {
 		freelook_forward_key = Key::W;
-	}
-	else {
+	} else {
 		Ref<InputEventKey> forward_key_event = forward_shortcut->get_events()[0];
 		freelook_forward_key = forward_key_event->get_physical_keycode();
 	}
@@ -1185,8 +1184,7 @@ void RuntimeNodeSelect::_set_freelook_keys(const Array &p_shortcut_serials) {
 	Ref<Shortcut> backwards_shortcut = shortcuts[1];
 	if (!backwards_shortcut.is_valid()) {
 		freelook_backwards_key = Key::S;
-	}
-	else {
+	} else {
 		Ref<InputEventKey> backwards_key_event = backwards_shortcut->get_events()[0];
 		freelook_backwards_key = backwards_key_event->get_physical_keycode();
 	}
@@ -1194,8 +1192,7 @@ void RuntimeNodeSelect::_set_freelook_keys(const Array &p_shortcut_serials) {
 	Ref<Shortcut> left_shortcut = shortcuts[2];
 	if (!left_shortcut.is_valid()) {
 		freelook_left_key = Key::A;
-	}
-	else {
+	} else {
 		Ref<InputEventKey> left_key_event = left_shortcut->get_events()[0];
 		freelook_left_key = left_key_event->get_physical_keycode();
 	}
@@ -1203,8 +1200,7 @@ void RuntimeNodeSelect::_set_freelook_keys(const Array &p_shortcut_serials) {
 	Ref<Shortcut> right_shortcut = shortcuts[3];
 	if (!right_shortcut.is_valid()) {
 		freelook_right_key = Key::D;
-	}
-	else {
+	} else {
 		Ref<InputEventKey> right_key_event = right_shortcut->get_events()[0];
 		freelook_right_key = right_key_event->get_physical_keycode();
 	}
@@ -1212,8 +1208,7 @@ void RuntimeNodeSelect::_set_freelook_keys(const Array &p_shortcut_serials) {
 	Ref<Shortcut> up_shortcut = shortcuts[4];
 	if (!up_shortcut.is_valid()) {
 		freelook_up_key = Key::E;
-	}
-	else {
+	} else {
 		Ref<InputEventKey> up_key_event = up_shortcut->get_events()[0];
 		freelook_up_key = up_key_event->get_physical_keycode();
 	}
@@ -1221,8 +1216,7 @@ void RuntimeNodeSelect::_set_freelook_keys(const Array &p_shortcut_serials) {
 	Ref<Shortcut> down_shortcut = shortcuts[5];
 	if (!down_shortcut.is_valid()) {
 		freelook_down_key = Key::Q;
-	}
-	else {
+	} else {
 		Ref<InputEventKey> down_key_event = down_shortcut->get_events()[0];
 		freelook_down_key = down_key_event->get_physical_keycode();
 	}
@@ -1230,8 +1224,7 @@ void RuntimeNodeSelect::_set_freelook_keys(const Array &p_shortcut_serials) {
 	Ref<Shortcut> speed_modifier_shortcut = shortcuts[6];
 	if (!speed_modifier_shortcut.is_valid()) {
 		freelook_speed_modifier_key = Key::SHIFT;
-	}
-	else {
+	} else {
 		Ref<InputEventKey> speed_modifier_key_event = speed_modifier_shortcut->get_events()[0];
 		freelook_speed_modifier_key = speed_modifier_key_event->get_physical_keycode();
 	}
@@ -1239,8 +1232,7 @@ void RuntimeNodeSelect::_set_freelook_keys(const Array &p_shortcut_serials) {
 	Ref<Shortcut> slow_modifier_shortcut = shortcuts[7];
 	if (!slow_modifier_shortcut.is_valid()) {
 		freelook_slow_modifier_key = Key::ALT;
-	}
-	else {
+	} else {
 		Ref<InputEventKey> slow_modifier_key_event = slow_modifier_shortcut->get_events()[0];
 		freelook_slow_modifier_key = slow_modifier_key_event->get_physical_keycode();
   }
